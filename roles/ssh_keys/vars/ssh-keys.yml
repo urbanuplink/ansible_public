@@ -1,0 +1,5 @@
+ssh_user_list:
+  - name: "{{user_name}}"
+    create_user_account: false
+    authorized_keys:
+      - "{{ssh_key}}"

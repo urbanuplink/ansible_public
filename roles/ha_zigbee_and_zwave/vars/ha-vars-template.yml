@@ -1,0 +1,37 @@
+## Secrets and Variables
+
+## General System Variables
+tz: 
+user_name: 
+ssh_key: 
+
+## Home Assistant Variables
+homeassistant_config_volume: 
+
+## ZWAVE JS Variables
+session_secret: 
+zwave_device: 
+zwave_config_volume: 
+
+## Mosquitto Variables
+mosquitto_config_file: 
+mosquitto_config_volume: 
+mosquitto_passwd_volume: 
+mosquitto_data_volume: 
+mosquitto_log_volume: 
+
+
+## Zigbee2MQTT Variables
+zigbee_device: 
+zigbee2mqtt_data_volume: 
+
+
+# Mosquitto.conf Variables
+mosquitto_data_location: 
+mosquitto_log_location: 
+mosquitto_passwd_file:
+
+# Mosquitto.passwd Variables
+mosquitto_server:
+mosquitto_user: 
+mosquitto_password:

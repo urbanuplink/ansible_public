@@ -1,0 +1,8 @@
+persistence true
+persistence_location {{ mosquitto_data_location }}
+log_dest file {{ mosquitto_log_location }}/mosquitto.log
+listener 1883
+
+## Authentication ##
+#allow_anonymous false
+#password_file {{ mosquitto_passwd_file }}

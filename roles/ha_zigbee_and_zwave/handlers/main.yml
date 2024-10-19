@@ -1,0 +1,12 @@
+- name: start homeassistant docker containers
+  shell: docker compose up -d 
+  args:
+    chdir: /docker/homeassistant
+  become: true
+
+- name: restart homeassistant docker containers
+  shell: docker compose down && docker compose up -d
+  args:
+    chdir: /docker/homeassistant
+  become: true
+  ignore_errors: true

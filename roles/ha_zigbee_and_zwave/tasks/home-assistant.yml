@@ -1,0 +1,114 @@
+
+- name: Check if /dev/serial/by-id exists
+  stat:
+    path: /dev/serial/by-id
+  register: serial_dir
+
+- name: Set zigbee_device_id and zwave_device_id to 'no_devices_connected' if directory does not exist
+  set_fact:
+    zigbee_device_id: "no_devices_connected"
+    zwave_device_id: "no_devices_connected"
+  when: not serial_dir.stat.exists
+
+- name: Identify the zigbee serial device if directory exists
+  command: "ls /dev/serial/by-id"
+  register: serial_devices
+  changed_when: false
+  when: serial_dir.stat.exists
+
+- name: Set zigbee_device_id if a matching device is found
+  set_fact:
+    zigbee_device_id: "{{ item }}"
+  loop: "{{ serial_devices.stdout_lines }}"
+  when: 
+    - serial_dir.stat.exists
+    - "'zigbee' in item.lower()"
+
+- name: Set zigbee_device_id to 'device_not_found' if no zigbee device was found
+  set_fact:
+    zigbee_device_id: "device_not_found"
+  when: serial_dir.stat.exists and zigbee_device_id is not defined
+
+- name: Set zwave_device_id if a matching device is found
+  set_fact:
+    zwave_device_id: "{{ item }}"
+  loop: "{{ serial_devices.stdout_lines }}"
+  when: 
+    - serial_dir.stat.exists
+    - "'zwave' in item.lower() or 'z-wave' in item.lower()"
+
+- name: Set zwave_device_id to 'device_not_found' if no zwave device was found
+  set_fact:
+    zwave_device_id: "device_not_found"
+  when: serial_dir.stat.exists and zwave_device_id is not defined
+
+- name: Debug device ids (optional)
+  debug:
+    msg: "Zigbee device ID: {{ zigbee_device_id }}, Z-Wave device ID: {{ zwave_device_id }}"
+
+
+- name: Check if mosquitto configuration file exists
+  stat:
+    path: /docker/homeassistant/config/mosquitto/config/mosquitto.conf
+  register: mosquitto_configuration_file
+
+- name: Deploy mosquitto.conf File
+  template:
+    src: home_assistant/mosquitto.conf.j2
+    dest: /docker/homeassistant/config/mosquitto/config/mosquitto.conf
+  when: not mosquitto_configuration_file.stat.exists
+
+- name: Deploy zigbee2mqtt configuration File
+  template:
+    src: home_assistant/zigbee2mqtt-config.yml.j2
+    dest: /docker/homeassistant/config/zigbee2mqtt/data/configuration.yaml
+
+- name: Deploy Home Assistant Docker Compose File
+  template:
+    src: home_assistant/docker-compose.yml.j2
+    dest: /docker/homeassistant/docker-compose.yml
+  notify: restart homeassistant docker containers
+
+- name: Run docker compose handler
+  meta: flush_handlers
+
+- name: Check if password file exists
+  stat:
+    path: /docker/homeassistant/config/mosquitto/config/password.txt
+  register: mosquitto_password_file
+
+- name: Set Mosquitto user credentials
+  command: >
+    docker exec mosquitto mosquitto_passwd -c -b {{ mosquitto_passwd_file }} {{ mosquitto_user }} {{ mosquitto_password }}
+  when: not mosquitto_password_file.stat.exists
+
+- name: Uncomment allow_anonymous line in Mosquitto config
+  lineinfile:
+    path: /docker/homeassistant/config/mosquitto/config/mosquitto.conf
+    regexp: '^#allow_anonymous false'
+    line: 'allow_anonymous false'
+    state: present
+  when: not mosquitto_password_file.stat.exists
+
+- name: Uncomment password_file line in Mosquitto config
+  lineinfile:
+    path: /docker/homeassistant/config/mosquitto/config/mosquitto.conf
+    regexp: '^#password_file {{ mosquitto_passwd_file }}'
+    line: 'password_file {{ mosquitto_passwd_file }}'
+    state: present
+  when: not mosquitto_password_file.stat.exists
+  notify: restart homeassistant docker containers
+
+- name: Run docker compose handler
+  meta: flush_handlers
+
+- name: Check if all containers are running
+  command: > 
+    docker ps --format '{{"{{"}}.Names{{"}}"}}: {{"{{"}}.State{{"}}"}}'
+  register: docker_status
+  failed_when: "'running' not in docker_status.stdout_lines"
+  ignore_errors: true
+
+- name: Show the output of docker ps after handler execution
+  debug:
+    msg: "{{ docker_status.stdout_lines | default('No output captured') }}"
