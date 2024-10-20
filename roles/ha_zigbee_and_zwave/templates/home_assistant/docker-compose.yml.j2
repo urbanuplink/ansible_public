@@ -32,7 +32,7 @@ services:
       - '3000:3000' # port for Z-Wave JS websocket server
 
   mosquitto:
-    image: eclipse-mosquitto
+    image: eclipse-mosquitto:latest
     hostname: mosquitto
     container_name: mosquitto
     restart: unless-stopped
@@ -47,7 +47,7 @@ services:
 
   zigbee2mqtt:
     container_name: zigbee2mqtt
-    image: koenkk/zigbee2mqtt
+    image: koenkk/zigbee2mqtt:latest
     restart: unless-stopped
     volumes:
       - {{ zigbee2mqtt_data_volume }}:/app/data
