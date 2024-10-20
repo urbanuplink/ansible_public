@@ -6,14 +6,17 @@ user_name:
 ssh_key: 
 
 ## Home Assistant Variables
+homeassistant_container_image:
 homeassistant_config_volume: 
 
 ## ZWAVE JS Variables
+zwave_container_image:
 session_secret: 
 zwave_device: 
 zwave_config_volume: 
 
 ## Mosquitto Variables
+mosquitto_container_image:
 mosquitto_config_file: 
 mosquitto_config_volume: 
 mosquitto_passwd_volume: 
@@ -22,6 +25,7 @@ mosquitto_log_volume:
 
 
 ## Zigbee2MQTT Variables
+zigbee_container_image:
 zigbee_device: 
 zigbee2mqtt_data_volume: 
 

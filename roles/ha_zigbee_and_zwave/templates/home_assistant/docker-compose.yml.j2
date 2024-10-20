@@ -1,7 +1,7 @@
 ---
 services:
   homeassistant:
-    image: ghcr.io/home-assistant/home-assistant:stable
+    image: {{ homeassistant_container_image }}
     container_name: homeassistant
     volumes:
       - {{ homeassistant_config_volume }}:/config
@@ -13,7 +13,7 @@ services:
 
   zwave-js-ui:
     container_name: zwave-js-ui
-    image: zwavejs/zwave-js-ui:latest
+    image: {{ zwave_container_image }}
     restart: unless-stopped
     tty: true
     stop_signal: SIGINT
@@ -32,7 +32,7 @@ services:
       - '3000:3000' # port for Z-Wave JS websocket server
 
   mosquitto:
-    image: eclipse-mosquitto:latest
+    image: {{ mosquitto_container_image }}
     hostname: mosquitto
     container_name: mosquitto
     restart: unless-stopped
@@ -47,7 +47,7 @@ services:
 
   zigbee2mqtt:
     container_name: zigbee2mqtt
-    image: koenkk/zigbee2mqtt:latest
+    image: {{ zigbee_container_image }}
     restart: unless-stopped
     volumes:
       - {{ zigbee2mqtt_data_volume }}:/app/data
