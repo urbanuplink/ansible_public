@@ -1,41 +1,41 @@
 ## Secrets and Variables
 
 ## General System Variables
-tz: 
-user_name: 
-ssh_key: 
+tz: "America/New_York"
+user_name: "admin"
+ssh_key: "<your-public-ssh-key>"
 
 ## Home Assistant Variables
-homeassistant_container_image:
-homeassistant_config_volume: 
+homeassistant_container_image: "homeassistant/home-assistant:stable"
+homeassistant_config_volume: "./config/homeassistant/homeassistant-config"
 
 ## ZWAVE JS Variables
-zwave_container_image:
-session_secret: 
-zwave_device: 
-zwave_config_volume: 
+zwave_container_image: "zwavejs/zwave-js-ui:9.27.8"
+session_secret: "session-secret"
+zwave_device: "/dev/serial/by-id/<insert_stick_reference_here>"
+zwave_config_volume: "./config/zwave/zwave-config"
 
 ## Mosquitto Variables
-mosquitto_container_image:
-mosquitto_config_file: 
-mosquitto_config_volume: 
-mosquitto_passwd_volume: 
-mosquitto_data_volume: 
-mosquitto_log_volume: 
+mosquitto_container_image: "eclipse-mosquitto:2.0.20"
+mosquitto_config_file: "./config/mosquitto/config/mosquitto.conf"
+mosquitto_config_volume: "./config/mosquitto/config"
+mosquitto_passwd_volume: "./config/mosquitto/config/mosquitto.passwd"
+mosquitto_data_volume: "./config/mosquitto/data"
+mosquitto_log_volume: "./config/mosquitto/log"
 
 
 ## Zigbee2MQTT Variables
-zigbee_container_image:
-zigbee_device: 
-zigbee2mqtt_data_volume: 
+zigbee_container_image: "koenkk/zigbee2mqtt:1.42.0"
+zigbee_device: "/dev/serial/by-id/<insert_stick_reference_here>"
+zigbee2mqtt_data_volume: "./config/zigbee2mqtt/data"
 
 
 # Mosquitto.conf Variables
-mosquitto_data_location: 
-mosquitto_log_location: 
-mosquitto_passwd_file:
+mosquitto_data_location: "/mosquitto/data"
+mosquitto_log_location: "/mosquitto/log"
+mosquitto_passwd_file: "/mosquitto/config/password.txt"
 
 # Mosquitto.passwd Variables
-mosquitto_server:
-mosquitto_user: 
-mosquitto_password:
+mosquitto_server: "mosquitto"
+mosquitto_user: "mosquittouser"
+mosquitto_password: "super-secret-password"
