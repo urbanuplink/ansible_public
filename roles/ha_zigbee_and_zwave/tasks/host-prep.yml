@@ -6,7 +6,7 @@
       - ca-certificates
       - curl
       - software-properties-common
-      - resolvconf
+      # - resolvconf ## Breaks DNS during playbook run. Not entirely sure why it's being installed... that's why I'm leaving it here.
       - gnupg
       - lsb-release
       - wireguard
