@@ -3,8 +3,8 @@
   become: true
   roles:
     - ../roles/ha_zigbee_and_zwave
-    - hifis.toolkit.unattended_upgrades
-    - hifis.toolkit.ssh_keys
+    # - hifis.toolkit.unattended_upgrades
+    # - hifis.toolkit.ssh_keys
   vars_files:
     - ../roles/ha_zigbee_and_zwave/vars/ha-vars.yml
     - ../roles/unattended_upgrades/vars/unattended-upgrades.yml
