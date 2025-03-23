@@ -56,3 +56,14 @@
     - /docker/homeassistant/config/mosquitto/log
     - /docker/homeassistant/config/zigbee2mqtt
     - /docker/homeassistant/config/zigbee2mqtt/data
+
+- name: Create a docker network - utilized to set a static IP for cloudlflared container.
+  ansible.builtin.shell: |
+    docker network inspect cloudflared_network >/dev/null 2>&1 || \
+    docker network create \
+      --driver bridge \
+      --subnet 172.30.0.0/24 \
+      --gateway 172.30.0.1 \
+      cloudflared_network
+  args:
+    executable: /bin/bash
