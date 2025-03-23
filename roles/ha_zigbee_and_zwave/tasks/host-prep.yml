@@ -37,6 +37,11 @@
     state: latest
     update_cache: yes
 
+- name: Install hifis.toolkit collection
+  ansible.builtin.command: ansible-galaxy collection install hifis.toolkit
+  args:
+    creates: ~/.ansible/collections/ansible_collections/hifis/toolkit
+
 - name: Create docker directories
   ansible.builtin.file:
     path: "{{ item }}"
