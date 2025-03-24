@@ -58,6 +58,7 @@
     - /docker/homeassistant/config/zigbee2mqtt/data
     - /docker/wireguard
     - /docker/wireguard/config
+    - /docker/wireguard/config/wg_confs
 
 - name: Create a docker network - utilized to set a static IP for cloudlflared container.
   ansible.builtin.shell: |
