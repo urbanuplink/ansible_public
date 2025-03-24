@@ -90,6 +90,26 @@
   failed_when: modprobe_result.rc != 0 and 'Module already in kernel' not in modprobe_result.stderr
   changed_when: modprobe_result.rc == 0
 
+- name: Set net.ipv4.conf.all.src_valid_mark at runtime
+  ansible.builtin.sysctl:
+    name: net.ipv4.conf.all.src_valid_mark
+    value: '1'
+    state: present
+    reload: yes
+
+- name: Ensure net.ipv4.conf.all.src_valid_mark is persistent
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.conf
+    regexp: '^net\.ipv4\.conf\.all\.src_valid_mark'
+    line: 'net.ipv4.conf.all.src_valid_mark=1'
+    create: yes
+    backup: yes
+
+- name: Reload sysctl to apply persistent settings
+  ansible.builtin.command: sysctl -p
+  register: sysctl_reload
+  changed_when: "'net.ipv4.conf.all.src_valid_mark = 1' in sysctl_reload.stdout"
+
 - name: Deploy Wireguard Docker Compose File
   template:
     src: wireguard/docker-compose.yml.j2

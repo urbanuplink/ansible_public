@@ -3,18 +3,14 @@ services:
   wireguard:
     image: {{ wireguard_container_image }}
     container_name: wireguard
+    network_mode: "host"
     cap_add:
       - NET_ADMIN
-      - SYS_MODULE #optional
     environment:
       - PUID={{ PUID }}
       - PGID={{ PGID }}
       - TZ={{ TZ }}
-      - PEERDNS={{ PEERDNS }} #optional
-      - ALLOWEDIPS={{ ALLOWEDIPS }}
     volumes:
       - {{ Wireguard_config_volume }}:/config
       - /lib/modules:/lib/modules #optional
-    sysctls:
-      - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
