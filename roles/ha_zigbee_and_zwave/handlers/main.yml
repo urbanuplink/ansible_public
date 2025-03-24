@@ -10,3 +10,10 @@
     chdir: /docker/homeassistant
   become: true
   ignore_errors: true
+
+- name: start wireguard docker container
+  shell: docker compose up -d
+  args:
+    chdir: /docker/wireguard
+  become: true
+  ignore_errors: true

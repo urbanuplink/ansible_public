@@ -56,6 +56,8 @@
     - /docker/homeassistant/config/mosquitto/log
     - /docker/homeassistant/config/zigbee2mqtt
     - /docker/homeassistant/config/zigbee2mqtt/data
+    - /docker/wireguard
+    - /docker/wireguard/config
 
 - name: Create a docker network - utilized to set a static IP for cloudlflared container.
   ansible.builtin.shell: |
@@ -67,3 +69,28 @@
       cloudflared_network
   args:
     executable: /bin/bash
+
+- name: Ensure modules-load.d directory exists
+  ansible.builtin.file:
+    path: /etc/modules-load.d
+    state: directory
+    mode: '0755'
+
+- name: Enable WireGuard kernel module at boot
+  ansible.builtin.copy:
+    dest: /etc/modules-load.d/wireguard.conf
+    content: "wireguard\n"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Load WireGuard module now (immediate effect)
+  ansible.builtin.command: modprobe wireguard
+  register: modprobe_result
+  failed_when: modprobe_result.rc != 0 and 'Module already in kernel' not in modprobe_result.stderr
+  changed_when: modprobe_result.rc == 0
+
+- name: Deploy Wireguard Docker Compose File
+  template:
+    src: wireguard/docker-compose.yml.j2
+    dest: /docker/wireguard/docker-compose.yml
