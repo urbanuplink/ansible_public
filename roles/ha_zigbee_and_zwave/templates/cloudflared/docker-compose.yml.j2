@@ -1,0 +1,16 @@
+services:
+  cloudflared:
+    image: {{ cloudflared_container_image }}
+    container_name: cloudflared
+    command: tunnel --no-autoupdate run --token insert-token-here
+    networks:
+      cloudflared_network:
+        ipv4_address: {{ ipv4_address }}
+    restart: unless-stopped
+
+networks:
+  cloudflared_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: {{ subnet }}

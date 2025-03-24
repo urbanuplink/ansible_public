@@ -63,6 +63,11 @@
     src: home_assistant/zigbee2mqtt-config.yml.j2
     dest: /docker/homeassistant/config/zigbee2mqtt/data/configuration.yaml
 
+- name: Deploy Home Assistant configuration.yaml file
+  template:
+    src: home_assistant/configuration.yaml.j2
+    dest: /docker/homeassistant/config/homeassistant/homeassistant-config/configuration.yaml
+
 - name: Deploy Home Assistant Docker Compose File
   template:
     src: home_assistant/docker-compose.yml.j2

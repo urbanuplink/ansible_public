@@ -59,17 +59,18 @@
     - /docker/wireguard
     - /docker/wireguard/config
     - /docker/wireguard/config/wg_confs
+    - /docker/cloudflared
 
-- name: Create a docker network - utilized to set a static IP for cloudlflared container.
-  ansible.builtin.shell: |
-    docker network inspect cloudflared_network >/dev/null 2>&1 || \
-    docker network create \
-      --driver bridge \
-      --subnet 172.30.0.0/24 \
-      --gateway 172.30.0.1 \
-      cloudflared_network
-  args:
-    executable: /bin/bash
+# - name: Create a docker network - utilized to set a static IP for cloudlflared container.
+#   ansible.builtin.shell: |
+#     docker network inspect cloudflared_network >/dev/null 2>&1 || \
+#     docker network create \
+#       --driver bridge \
+#       --subnet 172.30.0.0/24 \
+#       --gateway 172.30.0.1 \
+#       cloudflared_network
+#   args:
+#     executable: /bin/bash
 
 - name: Ensure modules-load.d directory exists
   ansible.builtin.file:
@@ -115,3 +116,8 @@
   template:
     src: wireguard/docker-compose.yml.j2
     dest: /docker/wireguard/docker-compose.yml
+
+- name: Deploy Cloudflared Docker Compose File
+  template:
+    src: cloudflared/docker-compose.yml.j2
+    dest: /docker/cloudflared/docker-compose.yml
